@@ -92,6 +92,7 @@
                     <th>Gender</th>
                     <th>Contact</th>
                     <th>Email</th>
+                    <th>Class</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -103,6 +104,7 @@
                     <td>{{ $student->gender }}</td>
                     <td>{{ $student->contactnumber }}</td>
                     <td>{{ $student->email }}</td>
+                    <td>{{ $student->class }}</td>
                     <td class="action-buttons">
                         <a href="{{ route('students.edit', $student->studentid) }}" class="btn btn-edit">Edit</a>
                         <form action="{{ route('students.destroy', $student->studentid) }}" method="POST" style="display:inline">

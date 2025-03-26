@@ -2,80 +2,95 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
-use App\Models\Student;
-use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class AttendanceController extends Controller
+class AuthController extends Controller
 {
-    public function index()
+    public function showLogin()
     {
-        $attendances = Attendance::with(['student', 'course'])
-            ->latest()
-            ->paginate(10);
-        return view('attendance.index', compact('attendances'));
+        return view('auth.login');
     }
-
-    public function create()
+    
+    public function login(Request $request)
     {
-        $students = Student::all();
-        $courses = Course::all();
-        return view('attendance.create', compact('students', 'courses'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'studentid' => 'required|exists:students,studentid',
-            'courseid' => 'required|exists:courses,id',
-            'attendance_date' => 'required|date',
-            'attendance_status' => 'required|in:Present,Absent,Late'
+        $credentials = $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string'
+        ], [
+            'username.required' => 'Username is required.',
+            'password.required' => 'Password is required.'
         ]);
 
-        Attendance::create($validated);
-        return redirect()->route('attendance.index')->with('success', 'Attendance recorded successfully.');
-    }
+        // Find the user by username
+        $user = User::where('username', $credentials['username'])->first();
 
-    public function edit($id)
-    {
-        $attendance = Attendance::findOrFail($id);
-        $students = Student::all();
-        $courses = Course::all();
-
-        return view('attendance.edit', compact('attendance', 'students', 'courses'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'studentid' => 'required|exists:students,studentid',
-            'courseid' => 'required|exists:courses,id',
-            'attendance_date' => 'required|date',
-            'attendance_status' => 'required|in:Present,Absent,Late'
+        // Detailed logging for debugging
+        Log::info('Login attempt', [
+            'username' => $credentials['username']
         ]);
 
-        $attendance = Attendance::findOrFail($id);
-        $attendance->update($validated);
+        // Check if user exists and password is correct
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            // Manually log in the user
+            Auth::login($user);
+            $request->session()->regenerate();
 
-        return redirect()->route('attendance.index')->with('success', 'Attendance updated successfully.');
+            // Log successful login
+            Log::info('Successful login', [
+                'username' => $user->username
+            ]);
+
+            return redirect()->intended('dashboard');
+        }
+
+        // Log failed login attempt
+        Log::warning('Login failed', [
+            'username' => $credentials['username']
+        ]);
+
+        // Return with error message
+        return back()->withErrors([
+            'login_error' => 'The username or password you entered is incorrect. Please try again.',
+        ])->withInput($request->only('username'));
     }
-
-    public function destroy($id)
+    
+    public function showRegister()
     {
-        $attendance = Attendance::findOrFail($id);
-        $attendance->delete();
-
-        return redirect()->route('attendance.index')->with('success', 'Attendance deleted successfully.');
+        return view('auth.register');
     }
-
-    public function dailyReport(Request $request)
+    
+    public function register(Request $request)
     {
-        $date = $request->input('date', now()->toDateString());
-        $attendances = Attendance::with(['student', 'course'])
-            ->whereDate('attendance_date', $date)
-            ->get();
+        $validated = $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ], [
+            'username.required' => 'Username is required.',
+            'username.unique' => 'This username is already taken.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 6 characters.',
+            'password.confirmed' => 'Passwords do not match.',
+        ]);
 
-        return view('attendance.daily-report', compact('attendances', 'date'));
+        $user = new User();
+        $user->username = $validated['username'];
+        $user->password = $validated['password']; // Will be hashed by the model's mutator
+        $user->save();
+
+        Auth::login($user);
+
+        return redirect()->intended('dashboard');
+    }
+    
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
     }
 }

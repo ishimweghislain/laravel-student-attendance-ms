@@ -19,7 +19,8 @@ class Student extends Model
         'contactnumber',
         'email',
         'address',
-        'enrollmentdate'
+        'enrollmentdate',
+        'class' 
     ];
 
     protected $dates = [

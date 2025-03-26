@@ -141,11 +141,11 @@
     <nav class="navbar">
         <a href="{{ route('dashboard') }}" class="navbar-brand">Saint Kizito TSS</a>
         <ul class="navbar-nav">
-            <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
-            <li><a href="{{ route('students.index') }}" class="nav-link">Students</a></li>
-            <li><a href="{{ route('courses.index') }}" class="nav-link">Courses</a></li>
-            <li><a href="{{ route('attendance.index') }}" class="nav-link">Attendance</a></li>
-            <li><a href="{{ route('grades.index') }}" class="nav-link">Grades</a></li>
+            <li><a href="{{ route('dashboard') }}" class="nav-link">| Dashboard</a></li>
+            <li><a href="{{ route('students.index') }}" class="nav-link">| Students</a></li>
+            <li><a href="{{ route('courses.index') }}" class="nav-link">| Courses</a></li>
+            <li><a href="{{ route('attendance.index') }}" class="nav-link">| Attendance</a></li>
+            <li><a href="{{ route('grades.index') }}" class="nav-link">| Grades</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
@@ -156,11 +156,7 @@
     </nav>
 
     <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        
 
         @yield('content')
     </div>

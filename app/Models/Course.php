@@ -9,7 +9,8 @@ class Course extends Model
     protected $fillable = [
         'name',
         'description',
-        'duration'
+        'duration',
+         'class'
     ];
 
     public function attendances()

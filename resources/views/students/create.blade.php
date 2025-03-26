@@ -126,6 +126,11 @@
                 <input type="date" name="enrollmentdate" class="form-input" value="{{ old('enrollmentdate') }}" required>
             </div>
 
+            <div class="form-group">
+                <label class="form-label">Class</label>
+                <input type="text" name="class" class="form-input" value="{{ old('class') }}" required>
+            </div>
+
             <div class="button-group">
                 <a href="{{ route('students.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Add Student</button>

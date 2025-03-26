@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,19 +10,22 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $primaryKey = 'userid';
-    protected $table = 'users';
 
     protected $fillable = [
-        'username', 
-        'password'
+        'username', 'password',
     ];
 
     protected $hidden = [
-        'password'
+        'password', 'remember_token',
     ];
-    
-    public function setPasswordAttribute($value)
+
+    public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] = Hash::make($value);
+        $this->attributes['password'] = Hash::make($password);
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'username';
     }
 }

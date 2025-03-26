@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Saint Kizito TSS</title>
+    <title>Register - Saint Kizito TSS</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
             justify-content: center;
         }
 
-        .login-container {
+        .register-container {
             background: white;
             padding: 2rem;
             border-radius: 10px;
@@ -59,7 +59,7 @@
             border-color: #3498db;
         }
 
-        .btn-login {
+        .btn-register {
             width: 100%;
             padding: 0.75rem;
             background: #3498db;
@@ -71,7 +71,7 @@
             transition: background 0.3s ease;
         }
 
-        .btn-login:hover {
+        .btn-register:hover {
             background: #2980b9;
         }
 
@@ -90,33 +90,37 @@
             border-left: 4px solid #e74c3c;
         }
 
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 1rem;
             color: #3498db;
             text-decoration: none;
         }
 
-        .register-link:hover {
+        .login-link:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="register-container">
         <h1 class="school-name">Saint Kizito TSS</h1>
         
         @if ($errors->any())
             <div class="alert-error">
-                @if ($errors->has('login_error'))
-                    {{ $errors->first('login_error') }}
-                @else
-                    Please check the form and try again.
-                @endif
+                @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                @endforeach
             </div>
         @endif
         
-        <form method="POST" action="{{ route('login.submit') }}">
+        @if (session('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        <form method="POST" action="{{ route('register.submit') }}">
             @csrf
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -134,8 +138,16 @@
                 @enderror
             </div>
             
-            <button type="submit" class="btn-login" style="margin-top:20px">Login</button>
-            <a href="{{ route('register') }}" class="register-link">Don't have an account? Register here</a>
+            <div class="form-group">
+                <label for="password_confirmation">Confirm Password:</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                @error('password_confirmation')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+            
+            <button type="submit" class="btn-register" style="margin-top:20px">Register</button>
+            <a href="{{ route('login') }}" class="login-link">Already have an account? Login here</a>
         </form>
     </div>
 </body>

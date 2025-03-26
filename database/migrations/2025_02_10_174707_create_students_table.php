@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->text('address');
             $table->date('enrollmentdate');
+            $table->string('class'); // New class field
             $table->timestamps();
         });
     }

@@ -90,6 +90,7 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Duration</th>
+                    <th>Class</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -99,6 +100,7 @@
                     <td>{{ $course->name }}</td>
                     <td>{{ $course->description }}</td>
                     <td>{{ $course->duration }}</td>
+                    <td>{{ $course->class }}</td>
                     <td class="action-buttons">
                         <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-edit">Edit</a>
                         <form action="{{ route('courses.destroy', $course->id) }}" method="POST" style="display:inline">

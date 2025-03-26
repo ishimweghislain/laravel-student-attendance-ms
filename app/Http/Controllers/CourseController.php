@@ -23,7 +23,8 @@ class CourseController extends Controller
         $validated = $request->validate([
             'name' => 'required|unique:courses',
             'description' => 'required',
-            'duration' => 'required'
+            'duration' => 'required',
+              'class' => 'required|string|max:100'
         ]);
 
         Course::create($validated);

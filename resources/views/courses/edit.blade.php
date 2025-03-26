@@ -101,6 +101,11 @@
                        value="{{ old('duration', $course->duration) }}" required>
             </div>
 
+            <div class="form-group">
+                <label class="form-label">Class</label>
+                <input type="text" name="class" class="form-input" value="{{ old('class', $course->class) }}" required>
+            </div>
+
             <div class="button-group">
                 <a href="{{ route('courses.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Update Course</button>

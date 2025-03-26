@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,8 +24,29 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ])->onlyInput('username');
+            'login_error' => 'The username or password you entered is incorrect. Please try again.',
+        ]);
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = new \App\Models\User();
+        $user->username = $validated['username'];
+        $user->password = $validated['password'];
+        $user->save();
+
+        Auth::login($user);
+        return redirect()->intended('dashboard');
     }
 
     public function logout(Request $request)
