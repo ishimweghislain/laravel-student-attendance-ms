@@ -26,7 +26,8 @@ class StudentController extends Controller
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
-            'dateofb' => 'required|date|before_or_equal:'.Carbon::now()->subYears(12)->format('Y-m-d'),
+            'dateofb' => 'required|date|before_or_equal:'
+            .Carbon::now()->subYears(12)->format('Y-m-d'),
             'contactnumber' => 'required|numeric|digits_between:10,15',
             'email' => 'required|email|unique:students',
             'address' => 'required|string',
@@ -54,7 +55,7 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students,email,'.$student->studentid.',studentid',
             'address' => 'required|string',
             'enrollmentdate' => 'required|date|before_or_equal:today',
-            'class' => 'required|string|max:100' // New class field validation
+            'class' => 'required|string|max:100' 
         ]);
         
         $student->update($validated);

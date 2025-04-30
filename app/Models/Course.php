@@ -16,6 +16,8 @@ class Course extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class, 'courseid');
+
+        
     }
 
     public function grades()
