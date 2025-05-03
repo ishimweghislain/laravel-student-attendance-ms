@@ -12,15 +12,15 @@ class DashboardController extends Controller
     public function index()
     {
         // Fetch recent attendance records with related student and course data
-        $recentGrades = Attendance::with(['student', 'course'])->latest()->take(5)->get();
+        $recentAttendance = Attendance::with(['student', 'course'])->latest()->take(5)->get();
         
-        // Fetch the total counts for students, courses, and today's attendance
+        
         $totalStudents = Student::count();
         $totalCourses = Course::count();
         $todayAttendance = Attendance::whereDate('attendance_date', today())->count();
     
-        // Pass all the data to the view
-        return view('dashboard', compact('recentGrades', 'totalStudents', 'totalCourses', 'todayAttendance'));
+
+        return view('dashboard', compact('recentAttendance', 'totalStudents', 'totalCourses', 'todayAttendance'));
     }
     
 }
